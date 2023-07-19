@@ -407,9 +407,6 @@ for train_index, val_index in skf.split(np.zeros(n), Y):
                         validation_steps=len(val_index)//BATCH_SIZE, 
                         #use_multiprocessing=True,
                         callbacks=callbacks)
-    # scores = model.evaluate(valid_data_generator, steps=len(
-    #     val_index) // BATCH_SIZE, verbose=0)
-    # print(dict(zip(model.metrics_names, scores)))
     #y_test
     true_y = valid_data_generator.classes
     test_steps_per_epoch = np.math.ceil(valid_data_generator.samples / valid_data_generator.batch_size)
@@ -423,27 +420,6 @@ for train_index, val_index in skf.split(np.zeros(n), Y):
     print('Classification Report')
     print(classification_report(true_y, y_preds, target_names=TARGET_NAMES))
 
-    # #Plot the Graph
-    # print("Loss Curves")
-    # plt.figure(figsize=[8,6])
-    # plt.plot(history.history['loss'],'r',linewidth=1)
-    # plt.plot(history.history['val_loss'],'b',linewidth=1)
-    # plt.legend(['Training Loss', 'Validation Loss'], fontsize=12)
-    # plt.xlabel('Epochs ',fontsize=12)
-    # plt.ylabel('Loss', fontsize=12)
-    # plt.title('Loss Curves', fontsize=12)
-    # plt.savefig('Loss_Curves_'+str(fold_var),dpi=300); 
-
-    # print("Accuracy Curves")
-    # plt.figure(figsize=[8,6])
-    # plt.plot(history.history['acc'],'r',linewidth=1)
-    # plt.plot(history.history['val_acc'],'b',linewidth=1)
-    # plt.legend(['Training Accuracy', 'Validation Accuracy'],fontsize=12)
-    # plt.xlabel('Epochs ',fontsize=12)
-    # plt.ylabel('Accuracy',fontsize=12)
-    # plt.title('Accuracy Curves',fontsize=12)
-    # plt.savefig('Accuracy_Curves_'+str(fold_var),dpi=300)
-
     fpr, tpr, t = roc_curve(true_y, Y_pred[:,1])
     np.save(BASE+"/roc/fpr_"+str(fold_var)+".npy", fpr)
     np.save(BASE+"/roc/tpr_"+str(fold_var)+".npy", tpr)
@@ -453,8 +429,7 @@ for train_index, val_index in skf.split(np.zeros(n), Y):
     aucs.append(roc_auc)
     plt.plot(fpr, tpr, lw=1, alpha=0.3, label='Fold %d (AUC = %0.2f)' % (fold_var, roc_auc))
 
-    # model.load_weights("/saved_models/model_"+str(fold_var)+".h5")
-    # tf.keras.backend.clear_session()
+
     fold_var += 1
 #--- Eğitim Geçmişinin Kaydedilmesi ---#
 
